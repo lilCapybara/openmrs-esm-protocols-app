@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>org.openmrs.module</groupId>
+    <artifactId>protocolos</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+  </parent>
+
+  <artifactId>protocolos-omod</artifactId>
+  <packaging>jar</packaging>
+  <name>Protocolos OMOD</name>
+  <description>Capa web (REST) del modulo Protocolos</description>
+
+  <dependencies>
+    <dependency>
+      <groupId>${project.parent.groupId}</groupId>
+      <artifactId>${project.parent.artifactId}-api</artifactId>
+      <version>${project.parent.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.openmrs.module</groupId>
+      <artifactId>webservices.rest-omod</artifactId>
+      <version>${webservices.restVersion}</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.openmrs.module</groupId>
+      <artifactId>webservices.rest-omod-common</artifactId>
+      <version>${webservices.restVersion}</version>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>javax.servlet</groupId>
+      <artifactId>javax.servlet-api</artifactId>
+      <version>${javaxVersion}</version>
+      <scope>provided</scope>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <finalName>${project.parent.artifactId}-${project.parent.version}</finalName>
+    <resources>
+      <resource>
+        <directory>src/main/resources</directory>
+        <filtering>true</filtering>
+      </resource>
+    </resources>
+
+    <plugins>
+      <plugin>
+        <groupId>org.openmrs.maven.plugins</groupId>
+        <artifactId>maven-openmrs-plugin</artifactId>
+        <extensions>true</extensions>
+        <executions>
+          <execution>
+            <id>init</id>
+            <phase>initialize</phase>
+            <goals>
+              <goal>initialize-module</goal>
+            </goals>
+          </execution>
+          <execution>
+            <id>pack</id>
+            <phase>package</phase>
+            <goals>
+              <goal>package-module</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <!-- Copia moduleApplicationContext.xml y messages.properties del api dentro del omod -->
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-dependency-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>Expand moduleApplicationContext and messages</id>
+            <goals>
+              <goal>unpack-dependencies</goal>
+            </goals>
+            <phase>generate-resources</phase>
+            <configuration>
+              <includeGroupIds>${project.parent.groupId}</includeGroupIds>
+              <includeArtifactIds>${project.parent.artifactId}-api</includeArtifactIds>
+              <excludeTransitive>true</excludeTransitive>
+              <includes>**\/*.xml,**\/*.properties</includes>
+              <outputDirectory>${project.build.directory}/classes</outputDirectory>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+</project>
