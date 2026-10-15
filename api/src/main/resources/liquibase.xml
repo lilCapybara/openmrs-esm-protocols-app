@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd">
+
+	<!--
+		Cada changeSet se ejecuta una sola vez (Liquibase lo registra en la tabla liquibasechangelog).
+		Nunca modificar un changeSet ya aplicado: para cambios nuevos, agregar otro changeSet abajo.
+	-->
+
+	<changeSet id="protocolos-2026-10-14-01" author="sebas">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<tableExists tableName="protocolos_protocolo" />
+			</not>
+		</preConditions>
+		<comment>Crea la tabla de protocolos institucionales</comment>
+
+		<createTable tableName="protocolos_protocolo">
+			<column name="protocolo_id" type="int" autoIncrement="true">
+				<constraints primaryKey="true" nullable="false" />
+			</column>
+			<column name="titulo" type="varchar(255)">
+				<constraints nullable="false" />
+			</column>
+			<column name="descripcion" type="varchar(1000)" />
+			<column name="nombre_archivo" type="varchar(255)">
+				<constraints nullable="false" />
+			</column>
+			<column name="mime_type" type="varchar(100)">
+				<constraints nullable="false" />
+			</column>
+			<column name="tamanio_bytes" type="bigint" />
+
+			<!-- Columnas estandar de BaseOpenmrsData -->
+			<column name="creator" type="int">
+				<constraints nullable="false" />
+			</column>
+			<column name="date_created" type="datetime">
+				<constraints nullable="false" />
+			</column>
+			<column name="changed_by" type="int" />
+			<column name="date_changed" type="datetime" />
+			<column name="voided" type="boolean" defaultValueBoolean="false">
+				<constraints nullable="false" />
+			</column>
+			<column name="voided_by" type="int" />
+			<column name="date_voided" type="datetime" />
+			<column name="void_reason" type="varchar(255)" />
+			<column name="uuid" type="char(38)">
+				<constraints nullable="false" unique="true" />
+			</column>
+		</createTable>
+
+		<addForeignKeyConstraint constraintName="protocolos_protocolo_creator_fk"
+			baseTableName="protocolos_protocolo" baseColumnNames="creator"
+			referencedTableName="users" referencedColumnNames="user_id" />
+		<addForeignKeyConstraint constraintName="protocolos_protocolo_changed_by_fk"
+			baseTableName="protocolos_protocolo" baseColumnNames="changed_by"
+			referencedTableName="users" referencedColumnNames="user_id" />
+		<addForeignKeyConstraint constraintName="protocolos_protocolo_voided_by_fk"
+			baseTableName="protocolos_protocolo" baseColumnNames="voided_by"
+			referencedTableName="users" referencedColumnNames="user_id" />
+	</changeSet>
+
+</databaseChangeLog>

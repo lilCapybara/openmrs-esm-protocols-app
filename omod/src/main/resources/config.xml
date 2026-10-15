@@ -24,7 +24,16 @@
 		<file>messages.properties</file>
 	</messages>
 
-	<!-- Paso 3: mappedClasses / packagesWithMappedClasses -->
-	<!-- Paso 4: privilegios Get Protocolos y Manage Protocolos -->
+	<!-- Paquetes con entidades JPA (@Entity) que Hibernate tiene que mapear -->
+	<packagesWithMappedClasses>org.openmrs.module.protocolos.model</packagesWithMappedClasses>
+	<!-- Privilegios: OpenMRS los crea al iniciar el modulo -->
+	<privilege>
+		<name>Get Protocolos</name>
+		<description>Permite ver y descargar los protocolos institucionales</description>
+	</privilege>
+	<privilege>
+		<name>Manage Protocolos</name>
+		<description>Permite subir, modificar y eliminar protocolos institucionales</description>
+	</privilege>
 
 </module>
