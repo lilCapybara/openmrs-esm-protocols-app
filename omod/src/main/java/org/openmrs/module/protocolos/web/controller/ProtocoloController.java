@@ -103,8 +103,9 @@ public class ProtocoloController extends BaseRestController {
     public SimpleObject subir(@RequestParam("file") MultipartFile file, @RequestParam("titulo") String titulo,
                               @RequestParam(value = "descripcion", required = false) String descripcion) {
 
-        // Chequeamos el permiso antes de tocar el disco
-        Context.requirePrivilege(ProtocolosConstants.PRIV_MANAGE_PROTOCOLOS);
+        if (!Context.hasPrivilege(ProtocolosConstants.PRIV_MANAGE_PROTOCOLOS)) {
+            throw new org.openmrs.api.APIAuthenticationException("Se requiere el privilegio " + ProtocolosConstants.PRIV_MANAGE_PROTOCOLOS);
+        }
 
         if (file == null || file.isEmpty()) {
             throw new IllegalRequestException("Falta el archivo");
